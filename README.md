@@ -1,4 +1,4 @@
-#Charlieplexing
+# Charlieplexing
 
 Charliplexing is a scheme for multiplexing access to components, like LEDs, switches,touch sensors etc, that can is more efficient (in terms of edge connections) than the well known x/y multiplexing.
  
