@@ -1,0 +1,30 @@
+{
+  "name": "charlieplexing",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": ".",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "3.0",
+    "gh-pages": "^5.0.0",
+    "vite": "^4.0.4"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.50.3",
+    "@react-three/fiber": "^8.9.2",
+    "@react-three/postprocessing": "2.7",
+    "@react-three/rapier": "^0.9.0",
+    "leva": "^0.9.35",
+    "r3f-perf": "^6.6.3",
+    "react": "18.2",
+    "react-dom": "18.2",
+    "three": "^0.148.0",
+    "zustand": "4.3"
+  }
+}
