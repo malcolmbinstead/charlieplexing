@@ -17,18 +17,52 @@ const root = ReactDOM.createRoot(document.querySelector('#root'))
 root.render(<Top1 />)
 //
 //
+let itsSearcher = null
+//
+function getSearcher() {
+  if (itsSearcher == null) {
+    itsSearcher = new URLSearchParams(window.location.search)
+  }
+  return itsSearcher
+}
+//
+function getField(theField, theDefault) {
+  let aReturn = theDefault
+  try {
+    const aSearcher = getSearcher()
+    if (aSearcher.has(theField)) {
+      const aValue = aSearcher.get(theField)
+      if (typeof theDefault == 'number') {
+        const aParsed = parseInt(aValue)
+        if (!isNaN(aParsed)) {
+          aReturn = aParsed
+        }
+      } else {
+        aReturn = aValue
+      }
+    }
+  } catch (theErr) {}
+  return aReturn
+}
+//
+//
 function Top1() {
   console.log('Top1.')
+  const aLayout = getField('Layout', 'circuit1')
+  const aWireCount = getField('WireCount', 4)
+  const aScanning = getField('Scanning', 'stopped')
   //
   return (
     <>
-      <Top2 />
+      <Top2 defLayout={aLayout} defWireCount={aWireCount} defScanning={aScanning} />
     </>
   )
 }
-
-function Top2() {
+//
+//
+function Top2({ defLayout, defWireCount, defScanning }) {
   console.log('Top2.')
+  //
   const aResetRef = useRef(0)
   //
   const doPointerMissed = (event) => {
@@ -60,7 +94,7 @@ function Top2() {
           minPolarAngle={aPolarAngle - aDA}
           maxPolarAngle={aPolarAngle + aDA}
         />
-        <Top3 resetref={aResetRef} />
+        <Top3 resetref={aResetRef} defLayout={defLayout} defWireCount={defWireCount} defScanning={defScanning} />
       </Canvas>
     </StrictMode>
   )

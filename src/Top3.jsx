@@ -15,7 +15,8 @@ import { useFrame } from '@react-three/fiber'
 //
 //
 import { buildCircuit0 } from './Circuit0.js'
-import { buildCircuit1 } from './Circuit1.js'
+//import { buildCircuit1 } from './Circuit1.js'
+import { buildCircuit1b } from './Circuit1b.js'
 import { buildCircuit2 } from './Circuit2.js'
 //
 import Rsource from './Rsource.jsx'
@@ -26,28 +27,43 @@ import Rnode from './Rnode.jsx'
 //
 //import Rpopup from './Rpopup.jsx'
 //
-export default function Top3({ resetref }) {
+export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
   //
   console.log('Top3.')
   //
-  const { Layout } = useControls({
-    Layout: { options: { circuit1: 'circuit1', circuit2: 'circuit2' } }
-  })
+  const aTimerRef = useRef(0)
+  const aScanRef = useRef(-1)
   //
-  const { WireCount: aWireCount } = useControls({
-    WireCount: {
-      value: 4,
-      min: 2,
-      max: 16,
-      step: 2
+  // What circuit to use.
+  const { Layout: aLayout } = useControls({
+    Layout: {
+      value: defLayout, // starting value
+      options: { circuit1: 'circuit1', circuit2: 'circuit2' }
     }
   })
   //
-  let aLayout = Layout
+  // How many wires to use.
+  const { WireCount: aWireCount } = useControls({
+    WireCount: {
+      value: defWireCount, // starting value
+      min: 2,
+      max: 16,
+      step: 1
+    }
+  })
+  //
+  // Scan mode.
+  const { Scanning: aScanning } = useControls({
+    Scanning: {
+      value: defScanning, // starting value
+      options: { stopped: 'stopped', running: 'running' }
+    }
+  })
+  //
   let aCircuit = buildCircuit0()
   //
   if (aLayout == 'circuit1') {
-    aCircuit = buildCircuit1(aWireCount)
+    aCircuit = buildCircuit1b(aWireCount)
   }
   //
   if (aLayout == 'circuit2') {
@@ -82,30 +98,55 @@ export default function Top3({ resetref }) {
         const aItem = theList[aI]
         aItem.stateNo = 0
       }
-    } catch (theErr) {
-      //
-    }
+    } catch (theErr) {}
   }
   //
-  useFrame(() => {
-    if (resetref.current != 0) {
-      resetref.current = 0
-      resetList(aSources)
-    }
+  const scanItem = (theNo) => {
+    try {
+      const aLed = aLeds[theNo]
+      const aL0 = aLed.links[0]
+      const aL1 = aLed.links[1]
+      const aC0 = aL0.obj.n
+      const aC1 = aL1.obj.n
+      const aS0 = aSources[aC0]
+      const aS1 = aSources[aC1]
+      aS0.stateNo = 1 // "0"
+      aS1.stateNo = 2 // "1"
+    } catch (theErr) {}
+  }
+  //
+  // update when the frame is about to be rerendered.
+  useFrame((state, delta, xrFrame) => {
+    try {
+      if (resetref.current != 0) {
+        resetref.current = 0
+        resetList(aSources)
+      }
+      if (aScanning == 'stopped') {
+        aTimerRef.current = 0
+      } else {
+        aTimerRef.current += delta
+        if (aTimerRef.current > 1) {
+          aTimerRef.current = 0
+          const aCount = aLeds.length
+          aScanRef.current++
+          aScanRef.current %= aCount
+          resetList(aSources)
+          scanItem(aScanRef.current)
+        }
+      }
+    } catch (theErr) {}
   })
   //
   //
   return (
     <group scale={[aScale, aScale, 1]}>
       <group position={[-aCX, -aCY, 0]}>
-        <Rsources
-          circuit={aCircuit}
-          sources={aSources}
-          sourcetexs={aSourceTexs}
-        />
+        <Rsources circuit={aCircuit} sources={aSources} sourcetexs={aSourceTexs} />
         <Rwires circuit={aCircuit} wires={aWires} />
         <Rresists circuit={aCircuit} resists={aResists} />
         <Rleds circuit={aCircuit} leds={aLeds} ledcolors={aLedColors} />
+        {/*<Rnodes circuit={aCircuit} nodes={aNodes} />*/}
       </group>
     </group>
   )
@@ -120,12 +161,7 @@ function Rsources({ circuit, sources, sourcetexs }) {
   return (
     <>
       {sources.map((source, index) => (
-        <Rsource
-          key={source.id}
-          circuit={circuit}
-          source={source}
-          sourcetexs={sourcetexs}
-        />
+        <Rsource key={source.id} circuit={circuit} source={source} sourcetexs={sourcetexs} />
       ))}
     </>
   )
