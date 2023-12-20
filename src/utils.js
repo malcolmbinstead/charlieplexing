@@ -36,3 +36,11 @@ export function logDebug(theStr) {
   }
 }
 //
+export function clamp(theV,theMin,theMax){
+  const aMin = Math.min(theMin,theMax)
+  const aMax = Math.max(theMin,theMax)
+  theV = Math.max(theV,aMin)
+  theV = Math.min(theV,aMax)
+  return theV
+}
+//

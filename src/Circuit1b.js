@@ -205,7 +205,7 @@ function addStackResists(theCircuit, theS0, theS1) {
       //
       const aN0 = new Node()
       const aN1 = new Node()
-      const aResist = new Source()
+      const aResist = new Resist()
       //
       aN0.obj.set(aSN0.i, aSN0.n, aSN0.x, aSN0.y)
       aN1.obj.set(aSN1.i, aSN1.n, aSN1.x, aSN1.y)

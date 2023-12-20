@@ -47,20 +47,25 @@ function getField(theField, theDefault) {
 //
 //
 function Top1() {
+  //
   console.log('Top1.')
   const aLayout = getField('Layout', 'circuit1')
-  const aWireCount = getField('WireCount', 4)
+  const aRotation = getField('Rotation', 0)
   const aScanning = getField('Scanning', 'stopped')
+  const aCount1 = getField('Count1', 4)
+  const aCount2 = getField('Count2', 4)
+  const aVCount3 = getField('VCount3', 2)
+  const aECount3 = getField('ECount3', 2)
   //
   return (
     <>
-      <Top2 defLayout={aLayout} defWireCount={aWireCount} defScanning={aScanning} />
+      <Top2 defLayout={aLayout} defRotation={aRotation} defScanning={aScanning} defCount1={aCount1} defCount2={aCount2} defVCount3={aVCount3} defECount3={aECount3} />
     </>
   )
 }
 //
 //
-function Top2({ defLayout, defWireCount, defScanning }) {
+function Top2({ defLayout, defRotation, defScanning, defCount1, defCount2, defVCount3, defECount3 }) {
   console.log('Top2.')
   //
   const aResetRef = useRef(0)
@@ -79,6 +84,7 @@ function Top2({ defLayout, defWireCount, defScanning }) {
     <StrictMode>
       <Instructions />
       <Canvas
+        dpr={[1, 2]}
         onPointerMissed={doPointerMissed}
         orthographic
         camera={{
@@ -94,7 +100,16 @@ function Top2({ defLayout, defWireCount, defScanning }) {
           minPolarAngle={aPolarAngle - aDA}
           maxPolarAngle={aPolarAngle + aDA}
         />
-        <Top3 resetref={aResetRef} defLayout={defLayout} defWireCount={defWireCount} defScanning={defScanning} />
+        <Top3
+          resetref={aResetRef}
+          defRotation={defRotation}
+          defLayout={defLayout}
+          defScanning={defScanning}
+          defCount1={defCount1}
+          defCount2={defCount2}
+          defVCount3={defVCount3}
+          defECount3={defECount3}
+        />
       </Canvas>
     </StrictMode>
   )

@@ -18,6 +18,7 @@ import { buildCircuit0 } from './Circuit0.js'
 //import { buildCircuit1 } from './Circuit1.js'
 import { buildCircuit1b } from './Circuit1b.js'
 import { buildCircuit2 } from './Circuit2.js'
+import { buildCircuit3 } from './Circuit3.js'
 //
 import Rsource from './Rsource.jsx'
 import Rresist from './Rresist.jsx'
@@ -27,7 +28,7 @@ import Rnode from './Rnode.jsx'
 //
 //import Rpopup from './Rpopup.jsx'
 //
-export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
+export default function Top3({ resetref, defLayout, defRotation, defScanning, defCount1, defCount2, defVCount3, defECount3 }) {
   //
   console.log('Top3.')
   //
@@ -38,19 +39,20 @@ export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
   const { Layout: aLayout } = useControls({
     Layout: {
       value: defLayout, // starting value
-      options: { circuit1: 'circuit1', circuit2: 'circuit2' }
+      options: { circuit1: 'circuit1', circuit2: 'circuit2', circuit3: 'circuit3' }
     }
   })
   //
-  // How many wires to use.
-  const { WireCount: aWireCount } = useControls({
-    WireCount: {
-      value: defWireCount, // starting value
-      min: 2,
-      max: 16,
+  // Rotation
+  const { Rotation: aRotation } = useControls({
+    Rotation: {
+      value: defRotation, // starting value
+      min: 0,
+      max: 3,
       step: 1
     }
   })
+  const aRotRad = (Math.PI / 2) * aRotation
   //
   // Scan mode.
   const { Scanning: aScanning } = useControls({
@@ -60,14 +62,53 @@ export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
     }
   })
   //
+  // How many wires to use for circuit1
+  const { Count1: aCount1 } = useControls({
+    Count1: {
+      value: defCount1, // starting value
+      min: 2,
+      max: 16,
+      step: 1
+    }
+  })
+  const { Count2: aCount2 } = useControls({
+    Count2: {
+      value: defCount2, // starting value
+      min: 2,
+      max: 16,
+      step: 1
+    }
+  })
+  const { VCount3: aVCount3 } = useControls({
+    VCount3: {
+      value: defVCount3, // starting value
+      min: 1,
+      max: 8,
+      step: 1
+    }
+  })
+  const { ECount3: aECount3 } = useControls({
+    ECount3: {
+      value: defECount3, // starting value
+      min: 1,
+      max: 8,
+      step: 1
+    }
+  })
+  //
+  //
   let aCircuit = buildCircuit0()
   //
   if (aLayout == 'circuit1') {
-    aCircuit = buildCircuit1b(aWireCount)
+    aCircuit = buildCircuit1b(aCount1)
   }
   //
   if (aLayout == 'circuit2') {
-    aCircuit = buildCircuit2(aWireCount)
+    aCircuit = buildCircuit2(aCount2)
+  }
+  //
+  if (aLayout == 'circuit3') {
+    aCircuit = buildCircuit3(aVCount3, aECount3)
   }
   //
   const aWires = aCircuit.wires
@@ -79,7 +120,11 @@ export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
   const aCX = (aCircuit.xmin + aCircuit.xmax) / 2
   const aCY = (aCircuit.ymin + aCircuit.ymax) / 2
   const aW = aCircuit.xmax - aCircuit.xmin
-  const aScale = 5 / (aW + 1)
+  const aH = aCircuit.ymax - aCircuit.ymin
+  const aScaleX = 5 / (aW + 1)
+  const aScaleY = 5 / (aH + 1)
+  //const aScale = (aRotation & 1) == 0 ? aScaleY : aScaleX
+  const aScale = aScaleX
   //
   const aZTex = useLoader(TextureLoader, './images/z.jpg')
   const a0Tex = useLoader(TextureLoader, './images/0.jpg')
@@ -138,15 +183,19 @@ export default function Top3({ resetref,defLayout,defWireCount,defScanning }) {
     } catch (theErr) {}
   })
   //
+  let aShowNodes = <Rnodes circuit={aCircuit} nodes={aNodes} />
+  aShowNodes = <></>
   //
   return (
-    <group scale={[aScale, aScale, 1]}>
-      <group position={[-aCX, -aCY, 0]}>
-        <Rsources circuit={aCircuit} sources={aSources} sourcetexs={aSourceTexs} />
-        <Rwires circuit={aCircuit} wires={aWires} />
-        <Rresists circuit={aCircuit} resists={aResists} />
-        <Rleds circuit={aCircuit} leds={aLeds} ledcolors={aLedColors} />
-        {/*<Rnodes circuit={aCircuit} nodes={aNodes} />*/}
+    <group rotation={[0, 0, aRotRad]}>
+      <group scale={[aScale, aScale, 1]}>
+        <group position={[-aCX, -aCY, 0]}>
+          <Rsources circuit={aCircuit} sources={aSources} sourcetexs={aSourceTexs} />
+          <Rwires circuit={aCircuit} wires={aWires} />
+          <Rresists circuit={aCircuit} resists={aResists} />
+          <Rleds circuit={aCircuit} leds={aLeds} ledcolors={aLedColors} />
+          {aShowNodes}
+        </group>
       </group>
     </group>
   )
