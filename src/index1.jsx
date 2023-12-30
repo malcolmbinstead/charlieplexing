@@ -4,56 +4,31 @@ import './style.css'
 import ReactDOM from 'react-dom/client'
 //
 import { StrictMode, useRef } from 'react'
-import * as THREE from 'three'
 import { Canvas, useLoader } from '@react-three/fiber'
 import { OrbitControls, MapControls } from '@react-three/drei'
-import { TextureLoader } from 'three/src/loaders/TextureLoader'
 import Instructions from './Instructions.jsx'
-import { getField } from './utils.js'
 //
-import Top3 from './Top3.jsx'
+import TopLayout from './TopLayout.jsx'
 //
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 //
 root.render(<Top1 />)
 //
 //
-
-//
-//
 function Top1() {
-  //
   console.log('Top1.')
-  const aLayout = getField('Layout', 'circuit1')
-  const aRotation = getField('Rotation', 0)
-  const aScanning = getField('Scanning', 'stopped')
-  const aCount1 = getField('Count1', 4)
-  const aCount2 = getField('Count2', 4)
-  const aVCount3 = getField('VCount3', 2)
-  const aECount3 = getField('ECount3', 2)
-  //
-  return (
-    <>
-      <Top2 defLayout={aLayout} defRotation={aRotation} defScanning={aScanning} defCount1={aCount1} defCount2={aCount2} defVCount3={aVCount3} defECount3={aECount3} />
-    </>
-  )
-}
-//
-//
-function Top2({ defLayout, defRotation, defScanning, defCount1, defCount2, defVCount3, defECount3 }) {
-  console.log('Top2.')
   //
   const aResetRef = useRef(0)
   //
   const doPointerMissed = (event) => {
     //event.stopPropagation()
+    console.log("missed")
     aResetRef.current++
   }
   //
   const aDA = 0
   const aAzimuthAngle = 0
   const aPolarAngle = Math.PI / 2
-  //
   //
   return (
     <StrictMode>
@@ -75,19 +50,10 @@ function Top2({ defLayout, defRotation, defScanning, defCount1, defCount2, defVC
           minPolarAngle={aPolarAngle - aDA}
           maxPolarAngle={aPolarAngle + aDA}
         />
-        <Top3
-          resetref={aResetRef}
-          defRotation={defRotation}
-          defLayout={defLayout}
-          defScanning={defScanning}
-          defCount1={defCount1}
-          defCount2={defCount2}
-          defVCount3={defVCount3}
-          defECount3={defECount3}
-        />
+        <TopLayout ResetRef={aResetRef}/>
       </Canvas>
     </StrictMode>
   )
+  //
 }
-//
 //

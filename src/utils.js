@@ -36,11 +36,39 @@ export function logDebug(theStr) {
   }
 }
 //
-export function clamp(theV,theMin,theMax){
-  const aMin = Math.min(theMin,theMax)
-  const aMax = Math.max(theMin,theMax)
-  theV = Math.max(theV,aMin)
-  theV = Math.min(theV,aMax)
+export function clamp(theV, theMin, theMax) {
+  const aMin = Math.min(theMin, theMax)
+  const aMax = Math.max(theMin, theMax)
+  theV = Math.max(theV, aMin)
+  theV = Math.min(theV, aMax)
   return theV
+}
+//
+let itsSearcher = null
+//
+function getSearcher() {
+  if (itsSearcher == null) {
+    itsSearcher = new URLSearchParams(window.location.search)
+  }
+  return itsSearcher
+}
+//
+export function getField(theField, theDefault) {
+  let aReturn = theDefault
+  try {
+    const aSearcher = getSearcher()
+    if (aSearcher.has(theField)) {
+      const aValue = aSearcher.get(theField)
+      if (typeof theDefault == 'number') {
+        const aParsed = parseInt(aValue)
+        if (!isNaN(aParsed)) {
+          aReturn = aParsed
+        }
+      } else {
+        aReturn = aValue
+      }
+    }
+  } catch (theErr) {}
+  return aReturn
 }
 //
