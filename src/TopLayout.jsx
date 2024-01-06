@@ -5,6 +5,7 @@ import { getField } from './utils.js'
 import Layout1 from './Layout1.jsx'
 import Layout2 from './Layout2.jsx'
 import Layout3 from './Layout3.jsx'
+import Layout4 from './Layout4.jsx'
 //
 export default function TopLayout({ ResetRef: theResetRef }) {
   console.log('TopLayout')
@@ -17,7 +18,12 @@ export default function TopLayout({ ResetRef: theResetRef }) {
   const { Layout: aLayout } = useControls({
     Layout: {
       value: aDefLayout, // starting value
-      options: { circuit1: 'circuit1', circuit2: 'circuit2', circuit3: 'circuit3' }
+      options: {
+        circuit1: 'circuit1',
+        circuit2: 'circuit2',
+        circuit3: 'circuit3',
+        circuit4: 'circuit4'
+      }
     }
   })
   //
@@ -40,12 +46,18 @@ export default function TopLayout({ ResetRef: theResetRef }) {
   })
   //
   //
-  let aReturn = <Layout1 ResetRef={theResetRef} Orientation={aOrientation} Scanning={aScanning} />
+  let aReturn = <></>
+  if (aLayout == 'circuit1') {
+    aReturn = <Layout1 ResetRef={theResetRef} Orientation={aOrientation} Scanning={aScanning} />
+  }
   if (aLayout == 'circuit2') {
     aReturn = <Layout2 ResetRef={theResetRef} Orientation={aOrientation} Scanning={aScanning} />
   }
   if (aLayout == 'circuit3') {
     aReturn = <Layout3 ResetRef={theResetRef} Orientation={aOrientation} Scanning={aScanning} />
+  }
+  if (aLayout == 'circuit4') {
+    aReturn = <Layout4 ResetRef={theResetRef} Orientation={aOrientation} Scanning={aScanning} />
   }
   //
   return aReturn

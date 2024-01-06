@@ -1,12 +1,12 @@
 //
 import { useControls } from 'leva'
 import { getField } from './utils.js'
-import { buildCircuit3b } from './Circuit3b.js'
+import { buildCircuit4 } from './Circuit4.js'
 import DrawLayout from './DrawLayout.jsx'
 //
 //
-export default function Layout3({ ResetRef: theResetRef, Orientation: theOrientation, Scanning: theScanning }) {
-  console.log('Layout3')
+export default function Layout4({ ResetRef: theResetRef, Orientation: theOrientation, Scanning: theScanning }) {
+  console.log('Layout4')
   //
   const aDefVCount = getField('VCount', 1)
   const aDefECount = getField('ECount', 4)
@@ -32,7 +32,7 @@ export default function Layout3({ ResetRef: theResetRef, Orientation: theOrienta
   })
   //
   //
-  let aCircuit = buildCircuit3b(aVCount, aECount)
+  let aCircuit = buildCircuit4(aVCount, aECount)
   //
   return <DrawLayout ResetRef={theResetRef} Circuit={aCircuit} Orientation={theOrientation} Scanning={theScanning} />
   //
