@@ -148,6 +148,7 @@ export class Circuit {
     this.count = 0 // number of wire routes.
     //
     this.nodes = [] // list of lists, or list of nodes.
+    this.xnodes = [] // additional nodes for clarity.
     this.sources = [] // list of links that drive the circuit.
     this.wires = [] // list of links that connect the circuit.
     this.resists = [] // list of links that loosely connect the circuit.

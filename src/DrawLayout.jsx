@@ -24,6 +24,7 @@ export default function DrawLayout({ ResetRef: theResetRef, Circuit: theCircuit,
   const aResists = theCircuit.resists
   const aLeds = theCircuit.leds
   const aNodes = theCircuit.nodes
+  const aXNodes = theCircuit.xnodes
   //
   const aCX = (theCircuit.xmin + theCircuit.xmax) / 2
   const aCY = (theCircuit.ymin + theCircuit.ymax) / 2
@@ -123,6 +124,7 @@ export default function DrawLayout({ ResetRef: theResetRef, Circuit: theCircuit,
           <Rwires circuit={theCircuit} wires={aWires} />
           <Rresists circuit={theCircuit} resists={aResists} />
           <Rleds circuit={theCircuit} leds={aLeds} ledcolors={aLedColors} />
+          <Rnodes circuit={theCircuit} nodes={aXNodes} />
           {aShowNodes}
         </group>
       </group>

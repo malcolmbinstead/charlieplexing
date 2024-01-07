@@ -1,14 +1,5 @@
 //
-import {
-  Obj,
-  Node,
-  Source,
-  Resist,
-  Wire,
-  Led,
-  Circuit,
-  crossLink
-} from './Parts.js'
+import { Obj, Node, Source, Resist, Wire, Led, Circuit, crossLink } from './Parts.js'
 //
 //
 const LED_CATHODE = 0
@@ -315,6 +306,8 @@ function makePath(theCircuit, theIndex) {
     //
     const aNode0 = makePathBase(theCircuit, theIndex)
     const aNode1 = makePathSlant(theCircuit, theIndex, aNode0)
+    //
+    theCircuit.xnodes.push(aNode1) // Node for clarity
     //
     makePathUp(theCircuit, theIndex, aNode1)
     makePathDown(theCircuit, theIndex, aNode1)
